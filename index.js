@@ -12,7 +12,9 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server, {
     cors: {
-      origin: '*',
+        origin: '*',
+        methods: ["GET", "POST"],
+        credentials: true
     }
   });
 
@@ -48,7 +50,7 @@ io.on('connect', (socket) => {
     });
 
     socket.on('disconnect', () => {
-        const user = removeUser(socket.id);$
+        const user = removeUser(socket.id);
         
         if(user) io.to(user.room).emit('message', {user: 'admin', text: `${user.name} has left.`});
         io.to(user.room).emit('roomData', { room: user.room, users: getUsers(user.room)});
